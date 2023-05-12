@@ -26,16 +26,25 @@ class ProfileController extends Controller
      */
     public function update(ProfileUpdateRequest $request): RedirectResponse
     {
-        dd($request->image_path->move(public_path('assets/images')));
+        // dd($request->image_path->move(public_path('images')));
+        // dd($request->user()->fill($request->validated()));
+        $path = null;
+
         $request->user()->fill($request->validated());
 
         if ($request->user()->isDirty('email')) {
             $request->user()->email_verified_at = null;
         }
 
-        $request->user()->save();
+        if ($request->hasFile('image_path')) {
+            $path = $request->image_path->store('images', 'public');
+        }
 
-        // return Redirect::route('profile.edit')->with('status', 'profile-updated');
+        $request->user()->image_path = $path;
+        $request->user()->save();
+        // $request->user()->saveImage($path);
+
+        return Redirect::route('profile.edit')->with('status', 'profile-updated');
     }
 
     /**

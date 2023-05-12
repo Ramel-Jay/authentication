@@ -22,8 +22,7 @@ class ProfileUpdateRequest extends FormRequest
             'email'             => ['email', 'max:255', Rule::unique(User::class)->ignore($this->user()->id)],
 
             // remove
-            'image_path'        => 'required|file|mimes:jpeg,png,jpg,|max:2048',
+            'image_path'        => 'required|file|mimes:jpeg,png,jpg|max:2048',
         ];
-
     }
 }
